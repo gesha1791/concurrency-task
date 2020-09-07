@@ -23,7 +23,6 @@ public class Foo {
             atomicBooleanSecond.compareAndSet(false, true);
             atomicBooleanFirst.compareAndSet(true, false);
         }
-
     }
 
     public void second(Runnable r){
@@ -38,7 +37,7 @@ public class Foo {
         if (atomicBooleanThird.get()){
             r.run();
             atomicBooleanThird.compareAndSet(true, false);
-            finish.set(true);
+            finish.compareAndSet(false,true);
         }
     }
 
