@@ -7,37 +7,38 @@ public class Foo {
     AtomicBoolean atomicBooleanSecond;
     AtomicBoolean atomicBooleanThird;
 
+    AtomicBoolean finish;
+
     public Foo() {
         atomicBooleanFirst = new AtomicBoolean(true);
         atomicBooleanSecond = new AtomicBoolean(false);
         atomicBooleanThird = new AtomicBoolean(false);
+        finish = new AtomicBoolean(false);
     }
 
 
     public void first(Runnable r){
         if (atomicBooleanFirst.get()){
+            r.run();
             atomicBooleanSecond.compareAndSet(false, true);
             atomicBooleanFirst.compareAndSet(true, false);
-
-            r.run();
         }
 
     }
 
     public void second(Runnable r){
-
         if (atomicBooleanSecond.get()){
+            r.run();
             atomicBooleanThird.compareAndSet(false, true);
             atomicBooleanSecond.compareAndSet(true, false);
-
-            r.run();
         }
     }
 
     public void third(Runnable r){
-
         if (atomicBooleanThird.get()){
             r.run();
+            atomicBooleanThird.compareAndSet(true, false);
+            finish.set(true);
         }
     }
 
@@ -48,7 +49,7 @@ public class Foo {
         System.out.print("two");
     }
     public void third(){
-        System.out.print("three");
+        System.out.print("third");
     }
 
 }
